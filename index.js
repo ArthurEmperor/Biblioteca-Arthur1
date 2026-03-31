@@ -1,21 +1,20 @@
 const express = require('express');
+const routes = require('./src/routes/index.routes');
+const { logger, errorHandler } = require('./src/middlewares/main.middlewares');
 const app = express();
 
-// Importa o roteador principal
-const routes = require('./src/routes/index.routes');
-
-// Middleware para interpretar JSON
 app.use(express.json());
 
-// Usa o roteador que contém todas as rotas, logger e 404
+
+routes.use(logger)
+
+
 app.use(routes);
 
-// Mensagens de inicialização (simulando os "postos de controle" da imagem)
-console.log('[SERVIDOR] Postos de controle ativos: logger | autenticar | errorHandler');
-console.log('[SERVIDOR] Postos de controle ativos: logger | autenticar | errorHandlers');
-console.log('[SERVIDOR] Postos de controle ativos: logger | autenticar | errors');
+
+app.use(errorHandler);
 
 const PORT = 3000;
 app.listen(PORT, () => {
-    console.log(`API rodando em http://localhost:${PORT}`);
+    console.log(`[SERVIDOR]: Biblioteca online em http://localhost:${PORT}`);
 });

@@ -40,4 +40,24 @@ const criarUsuario = async (req, res) => {
     }
 };
 
-module.exports = { listarUsuarios, buscarUsuarioPorId, criarUsuario };
+exports.login = (req, res) => {
+  const { email, password } = req.body;
+
+  // simulação simples (depois você melhora)
+  if (email === "teste@email.com" && password === "123456") {
+    return res.json({
+      message: "Login realizado com sucesso!"
+    });
+  }
+
+  return res.status(401).json({
+    erro: "Email ou senha inválidos"
+  });
+};
+
+module.exports = { 
+  listarUsuarios, 
+  buscarUsuarioPorId, 
+  criarUsuario,
+  login
+};
