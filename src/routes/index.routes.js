@@ -5,8 +5,6 @@ const usuariosRoutes = require('./usuarios.routes');
 const autenticar = require('../middlewares/auth.middleware');
 const { logger } = require('../middlewares/main.middlewares');
 
-
-
 router.get('/', (req, res) => {
     res.json({ sistema: 'Biblioteca Arthur', status: 'Online' });
 });
@@ -20,8 +18,6 @@ router.use('/usuarios', usuariosRoutes);
 router.use(autenticar);
 
 router.use('/livros', livrosRoutes);
-router.use('/usuarios', usuariosRoutes);
-
 
 router.use((req, res) => {
     res.status(404).json({ erro: 'Rota não encontrada na biblioteca Arthur.' });

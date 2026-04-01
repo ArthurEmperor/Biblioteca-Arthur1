@@ -1,16 +1,11 @@
 const express = require('express');
 const routes = require('./src/routes/index.routes');
-const { logger, errorHandler } = require('./src/middlewares/main.middlewares');
+const { errorHandler } = require('./src/middlewares/main.middlewares');
 const app = express();
 
 app.use(express.json());
 
-
-routes.use(logger)
-
-
 app.use(routes);
-
 
 app.use(errorHandler);
 

@@ -5,7 +5,6 @@ module.exports = (req, res, next) => {
     return res.status(400).json({ message: "Corpo da requisição não enviado" });
   }
 
-  
   if (!email || !senha) {
     return res.status(400).json({ message: "Email e senha são obrigatórios" });
   }
