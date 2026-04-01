@@ -9,7 +9,8 @@ const autenticar = (req, res, next) => {
         })
     }
 
-    const token = authHeader.split(' ')[1];
+    const token = authHeader.split(' ').slice(1).join(' ');
+    console.log('Token recebido:', token);
 
     if (token !== CHAVE_ACESSO) {
         return res.status(403).json({ 
