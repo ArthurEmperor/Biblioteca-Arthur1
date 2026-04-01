@@ -4,6 +4,7 @@ const livrosRoutes = require('./livros.routes');
 const usuariosRoutes = require('./usuarios.routes');
 const autenticar = require('../middlewares/auth.middleware');
 const { logger } = require('../middlewares/main.middlewares');
+const { validarContentType } = require('../middlewares/main.middlewares');
 
 router.get('/', (req, res) => {
     res.json({ sistema: 'Biblioteca Arthur', status: 'Online' });
@@ -11,11 +12,12 @@ router.get('/', (req, res) => {
 
 router.use(logger);
 
-// rotas públicas (SEM autenticação)
+
 router.use('/usuarios', usuariosRoutes);
 
-// agora sim protege o resto
+
 router.use(autenticar);
+router.use(validarContentType);
 
 router.use('/livros', livrosRoutes);
 
