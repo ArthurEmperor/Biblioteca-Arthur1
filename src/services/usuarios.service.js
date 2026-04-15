@@ -1,26 +1,28 @@
-let usuarios = [
-    { id: 1, nome: 'Anderson Dutra', email: 'anderson@gmail.com' },
-    { id: 2, nome: 'Jailsson silva', email: 'jailsson@gmail.com' },
-    { id: 3, nome: 'Robert Silva', email: 'robert@gmail.com' },
-];
+const pool = require('../database/connection');
 
 const listarTodosUsuarios = async () => {
-    return usuarios;
+  const resultado = await pool.query('SELECT id, nome, matrícula, email, role FROM usuarios ORDER BY id');
+  return resultado.rows;
 };
 
 const buscarUsuarioPorId = async (id) => {
-    const usuario = usuarios.find((user) => user.id === Number(id));
-    return usuario || null;
+  const resultado = await pool.query('SELECT id, nome, matrícula, email, role FROM usuarios WHERE id = $1', [id]);
+  return resultado.rows[0] || null;
 };
 
-const criarUsuario = async ({ nome, email }) => {
-    if (!nome || !email) {
-        throw new Error('Nome e E-mail são obrigatórios.');
-    }
-    const novoId = usuarios.length + 1;
-    const novoUsuario = { id: novoId, nome, email };
-    usuarios.push(novoUsuario);
-    return novoUsuario;
+const criarUsuario = async ({ nome, matricula, email, role = 'user', senha }) => {
+  if (!nome || !email) throw new Error('Nome e email são obrigatórios.');
+  const resultado = await pool.query(
+    `INSERT INTO usuarios (nome, matrícula, email, role)
+     VALUES ($1, $2, $3, $4) RETURNING id, nome, email, role`,
+    [nome, matricula || null, email, role]
+  );
+  return resultado.rows[0];
 };
 
-module.exports = { listarTodosUsuarios, buscarUsuarioPorId, criarUsuario };
+
+const login = async (email, senha) => {
+  throw new Error('Autenticação não implementada: falta coluna senha na tabela usuarios.');
+};
+
+module.exports = { listarTodosUsuarios, buscarUsuarioPorId, criarUsuario, login };

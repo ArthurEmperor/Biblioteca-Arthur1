@@ -1,53 +1,23 @@
-const acervo = [
-    {
-        id: 1,
-        titulo: "Horus Rising",
-        autor: "Dan Abnett",
-        disponivel: true,
-    },
-    {
-        id: 2,
-        titulo: "1984",
-        autor: "George Orwell",
-        disponivel: true,
-    },
-    {
-        id: 3,
-        titulo: "The Infinite and The Divine",
-        autor: "Robert Rath",
-        disponivel: true,
-    },
-];
+const pool = require('../database/connection');
 
-//Listar todos os livros
 const listarTodosLivros = async () => {
-  return acervo;
+  const resultado = await pool.query('SELECT * FROM livros ORDER BY id');
+  return resultado.rows;
 };
 
-//Criar um novo livro
-const criarLivro = async ({ titulo, autor, disponivel = true }) => {
-    // Validação dos campos obrigatórios
-    if (!titulo || !autor) {
-        throw new Error('Título e autor são obrigatórios.');
-    }
-    
-    // Gerar novo ID (maior ID existente + 1)
-    const novoId = acervo.length > 0 ? Math.max(...acervo.map(livro => livro.id)) + 1 : 1;
-    
-    const novoLivro = {
-        id: novoId,
-        titulo,
-        autor,
-        disponivel: disponivel !== undefined ? disponivel : true,
-    };
-    
-    acervo.push(novoLivro);
-    return novoLivro;
-};
-
-//Buscar livro pelo id
 const buscarLivroPorId = async (id) => {
-    const livro = acervo.find((livro) => livro.id === Number(id));
-    return livro || null;
+  const resultado = await pool.query('SELECT * FROM livros WHERE id = $1', [id]);
+  return resultado.rows[0] || null;
 };
+
+const criarLivro = async ({ titulo, autor, isbn, ano_publicacao, disponivel = true }) => {
+  if (!titulo || !autor) throw new Error('Título e autor são obrigatórios.');
+  const resultado = await pool.query(
+    `INSERT INTO livros (titulo, autor, isbn, ano_publicacao, disponível)
+     VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+    [titulo, autor, isbn || null, ano_publicacao || null, disponivel]
+  );
+  return resultado.rows[0];
+};
+
 module.exports = { listarTodosLivros, buscarLivroPorId, criarLivro };
