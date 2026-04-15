@@ -5,7 +5,7 @@ const listarLivros = async (req, res, next) => {
         const livros = await livrosService.listarTodosLivros();
         res.status(200).json({ total: livros.length, livros });
     } catch (erro) {
-        next(erro);  // encaminha para o errorHandler
+        next(erro);
     }
 };
 
@@ -24,8 +24,8 @@ const buscarLivroPorId = async (req, res, next) => {
 
 const criarLivro = async (req, res, next) => {
     try {
-        const { titulo, autor, disponivel } = req.body;
-        const novoLivro = await livrosService.criarLivro({ titulo, autor, disponivel });
+        const { titulo, autor, isbn, ano_publicacao, disponivel, categoria_id } = req.body;
+        const novoLivro = await livrosService.criarLivro({ titulo, autor, isbn, ano_publicacao, disponivel, categoria_id });
         res.status(201).json({
             mensagem: 'Livro cadastrado com sucesso!',
             livro: novoLivro,
